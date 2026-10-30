@@ -1,0 +1,124 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function userData(uid) { return get(/databases/$(database)/documents/users/$(uid)).data; }
+    function isRole(role) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userData(request.auth.uid).role == role;
+    }
+    function validName(n) { return n is string && n.size() >= 2 && n.size() <= 80; }
+
+    // ---- users: role is chosen once at sign-up and can never change ----
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'role', 'createdAt'])
+        && request.resource.data.keys().hasAll(['uid', 'name', 'role', 'createdAt'])
+        && request.resource.data.uid == uid
+        && request.resource.data.role in ['student', 'teacher']
+        && validName(request.resource.data.name)
+        && request.resource.data.createdAt == request.time;
+      // Only `name` is client-editable; role, imageUrl and imagePath are not.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name'])
+        && validName(request.resource.data.name);
+      allow delete: if false;
+
+      match /devices/{token} {
+        allow read: if false;
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['token', 'platform', 'updatedAt'])
+          && request.resource.data.token == token;
+        allow delete: if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    // ---- teacher profiles: owned by the teacher; imageUrl only via Cloud Functions ----
+    function validTeacher(d) {
+      return d.keys().hasOnly(['name', 'imageUrl', 'specialization', 'subjects', 'biography',
+                               'prices', 'minStudents', 'maxStudents', 'isComplete', 'updatedAt'])
+        && validName(d.name)
+        && d.specialization is string && d.specialization.size() <= 100
+        && d.subjects is list && d.subjects.size() <= 20
+        && d.biography is string && d.biography.size() <= 600
+        && d.prices is map && d.prices.keys().hasOnly(['elementary', 'middle', 'high'])
+        && d.minStudents is int && d.minStudents >= 2 && d.minStudents <= 30
+        && d.maxStudents is int && d.maxStudents >= d.minStudents && d.maxStudents <= 30
+        && d.isComplete is bool;
+    }
+    match /teacherProfiles/{uid} {
+      allow read: if signedIn();
+      allow create: if isRole('teacher') && request.auth.uid == uid
+        && validTeacher(request.resource.data)
+        && !('imageUrl' in request.resource.data);
+      allow update: if isRole('teacher') && request.auth.uid == uid
+        && validTeacher(request.resource.data)
+        && request.resource.data.get('imageUrl', null) == resource.data.get('imageUrl', null);
+      allow delete: if false;
+    }
+
+    // ---- availability: teachers manage only their own *available* slots ----
+    function validDuration(m) { return m is int && m >= 15 && m <= 240; }
+    match /availabilitySlots/{slotId} {
+      allow read: if signedIn();
+      allow create: if isRole('teacher')
+        && request.resource.data.keys().hasOnly(['teacherId', 'startAt', 'durationMinutes', 'status', 'groupId', 'createdAt'])
+        && request.resource.data.teacherId == request.auth.uid
+        && request.resource.data.status == 'available'
+        && request.resource.data.groupId == null
+        && request.resource.data.startAt is timestamp
+        && request.resource.data.startAt > request.time
+        && validDuration(request.resource.data.durationMinutes)
+        && request.resource.data.createdAt == request.time;
+      allow update: if isRole('teacher')
+        && resource.data.teacherId == request.auth.uid
+        && resource.data.status == 'available'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['startAt', 'durationMinutes'])
+        && request.resource.data.startAt > request.time
+        && validDuration(request.resource.data.durationMinutes);
+      allow delete: if isRole('teacher')
+        && resource.data.teacherId == request.auth.uid
+        && resource.data.status == 'available';
+    }
+
+    // ---- study groups: read-only for clients; every change goes through Cloud Functions ----
+    match /studyGroups/{groupId} {
+      allow read: if signedIn() && (
+        resource.data.status == 'Open'
+        || request.auth.uid in resource.data.memberIds
+        || request.auth.uid == resource.data.teacherId);
+      allow write: if false;
+
+      // Chat exists only while the group is Accepted, for its members and its teacher.
+      match /messages/{messageId} {
+        function group() { return get(/databases/$(database)/documents/studyGroups/$(groupId)).data; }
+        function canChat() {
+          return signedIn() && group().status == 'Accepted'
+            && (request.auth.uid in group().memberIds || request.auth.uid == group().teacherId);
+        }
+        allow read: if canChat();
+        allow create: if canChat()
+          && request.resource.data.keys().hasOnly(['senderId', 'senderName', 'text', 'createdAt'])
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.senderName is string && request.resource.data.senderName.size() <= 80
+          && request.resource.data.text is string
+          && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 2000
+          && request.resource.data.createdAt == request.time;
+        allow update, delete: if false;
+      }
+    }
+
+    // ---- notifications: created by Cloud Functions; users only mark their own as read ----
+    match /notifications/{id} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow update: if signedIn() && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
+        && request.resource.data.read is bool;
+      allow create, delete: if false;
+    }
+  }
+}

@@ -15,7 +15,10 @@ class StudyGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final progress = group.capacity == 0 ? 0.0 : group.currentMembers / group.capacity;
+    final capacity = group.capacity;
+    final joined = capacity == 0 ? 0 : group.currentMembers.clamp(0, capacity);
+    // Keep gaps readable even when the group has many seats.
+    final gap = capacity > 24 ? 1.0 : 3.0;
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
@@ -53,14 +56,34 @@ class StudyGroupCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(9),
-                child: LinearProgressIndicator(
-                  value: progress.clamp(0, 1).toDouble(),
-                  minHeight: 6,
-                  backgroundColor: scheme.outlineVariant,
+              // One segment per seat: filled = students already joined.
+              if (capacity == 0)
+                Container(
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: scheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                )
+              else
+                Row(
+                  children: [
+                    for (var i = 0; i < capacity; i++) ...[
+                      if (i > 0) SizedBox(width: gap),
+                      Expanded(
+                        child: Container(
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: i < joined
+                                ? scheme.secondary
+                                : scheme.outlineVariant,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ),
               const SizedBox(height: 6),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

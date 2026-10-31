@@ -31,6 +31,10 @@ class NotificationsPage extends StatelessWidget {
     );
   }
 
+  void _deleteAll(BuildContext context) {
+    context.read<NotificationsBloc>().add(const NotificationsAllDeleted());
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -59,7 +63,7 @@ class NotificationsPage extends StatelessWidget {
             );
           }
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 96),
             itemCount: state.items.length,
             separatorBuilder: (_, _) => const SizedBox(height: 10),
             itemBuilder: (context, i) {
@@ -88,6 +92,24 @@ class NotificationsPage extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: BlocBuilder<NotificationsBloc, NotificationsState>(
+        buildWhen: (prev, curr) {
+          final a = prev is NotificationsLoaded && prev.items.isNotEmpty;
+          final b = curr is NotificationsLoaded && curr.items.isNotEmpty;
+          return a != b;
+        },
+        builder: (context, state) {
+          final hasItems = state is NotificationsLoaded && state.items.isNotEmpty;
+          if (!hasItems) return const SizedBox.shrink();
+          return FloatingActionButton.small(
+            heroTag: 'deleteAllNotifications',
+            tooltip: context.tr('notifications.deleteAll'),
+            onPressed: () => _deleteAll(context),
+            child: const Icon(Icons.delete_outline_rounded),
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

@@ -36,6 +36,11 @@ class NotificationsAllMarkedRead extends NotificationsEvent {
   const NotificationsAllMarkedRead();
 }
 
+/// Permanently deletes every notification of the signed-in user.
+class NotificationsAllDeleted extends NotificationsEvent {
+  const NotificationsAllDeleted();
+}
+
 /// Internal: stream emissions.
 class NotificationsUpdated extends NotificationsEvent {
   const NotificationsUpdated(this.items);

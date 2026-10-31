@@ -22,17 +22,14 @@ class TeacherProfile extends Equatable {
   final List<String> subjects;
   final String biography;
 
-  /// Price per student per session, keyed by `elementary` / `middle` / `high`.
   final Map<String, int> prices;
 
-  /// Allowed group size range (including the creator).
   final int minStudents;
   final int maxStudents;
   final bool isComplete;
 
   int? priceFor(String level) => prices[level];
 
-  /// Levels this teacher teaches (price > 0).
   List<String> get levels =>
       ['elementary', 'middle', 'high'].where((l) => (prices[l] ?? 0) > 0).toList();
 

@@ -8,6 +8,8 @@ abstract class NotificationsUseCase {
 
   Future<void> markAllRead({required String userId});
 
+  Future<void> deleteAll({required String userId});
+
   Future<void> registerDevice();
 
   Future<void> unregisterDevice();
@@ -29,6 +31,10 @@ class NotificationsUseCaseImpl implements NotificationsUseCase {
   @override
   Future<void> markAllRead({required String userId}) =>
       repository.markAllRead(userId: userId);
+
+  @override
+  Future<void> deleteAll({required String userId}) =>
+      repository.deleteAll(userId: userId);
 
   @override
   Future<void> registerDevice() => repository.registerDevice();

@@ -138,9 +138,25 @@ class _HomeTab extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            context.tr('home.hello', {'name': name}),
-                            style: Theme.of(context).textTheme.headlineSmall,
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () => onSelectTab(3),
+                                customBorder: const CircleBorder(),
+                                child: UserAvatar(
+                                  name: name,
+                                  imageUrl: getIt<Session>().user?.imageUrl,
+                                  radius: 24,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  context.tr('home.hello', {'name': name}),
+                                  style: Theme.of(context).textTheme.headlineSmall,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 14),
                           if (next != null)

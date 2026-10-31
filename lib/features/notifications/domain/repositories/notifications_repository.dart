@@ -8,6 +8,9 @@ abstract class NotificationsRepository {
 
   Future<void> markAllRead({required String userId});
 
+  /// Permanently removes every notification belonging to [userId].
+  Future<void> deleteAll({required String userId});
+
   /// Asks for permission, stores the FCM token under the signed-in user and
   /// keeps it fresh on token rotation.
   Future<void> registerDevice();

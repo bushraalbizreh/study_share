@@ -15,7 +15,6 @@ class OnboardingScaffold extends StatelessWidget {
   final int index;
   final IconData icon;
 
-  /// Small icons orbiting the main one.
   final List<IconData> satellites;
 
   @override

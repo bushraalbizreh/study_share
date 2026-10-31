@@ -139,7 +139,6 @@ class StudyGroupRemoteSourceImpl implements StudyGroupRemoteSource {
     final slotRef = _db.collection('availabilitySlots').doc(slotId);
 
     await _db.runTransaction<void>((transaction) async {
-      // اقرأ جميع المستندات أولًا قبل إجراء أي كتابة.
       final studentSnap = await transaction.get(studentRef);
       final profileSnap = await transaction.get(profileRef);
       final slotSnap = await transaction.get(slotRef);
@@ -239,7 +238,7 @@ class StudyGroupRemoteSourceImpl implements StudyGroupRemoteSource {
       final teacherName =
           (profile['name'] ?? '').toString();
 
-      // أنشئ المجموعة.
+      
       transaction.set(groupRef, {
         'creatorId': uid,
         'teacherId': teacherId,
@@ -261,7 +260,6 @@ class StudyGroupRemoteSourceImpl implements StudyGroupRemoteSource {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // احجز الوقت ضمن المعاملة نفسها.
       transaction.update(slotRef, {
         'status': 'booked',
         'groupId': groupRef.id,
@@ -273,7 +271,6 @@ class StudyGroupRemoteSourceImpl implements StudyGroupRemoteSource {
     return groupRef.id;
   }
 
- 
 @override
 Future<void> joinGroup({required String groupId}) async {
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -339,8 +336,6 @@ Future<void> joinGroup({required String groupId}) async {
       final memberNames = Map<String, dynamic>.from(rawNames);
       final capacity = rawCapacity;
 
-      // Allow a retry of the notification request if this student
-      // already belongs to a full Pending group.
       if (members.contains(uid)) {
         return group['status'] == GroupStatus.pending &&
             members.length >= capacity;
@@ -515,15 +510,30 @@ try {
 }
 
 
+@override
+Future<void> leaveGroup({
+  required String groupId,
+}) async {
+  final currentUser = FirebaseAuth.instance.currentUser;
 
-  @override
-  Future<void> leaveGroup({
-    required String groupId,
-  }) async {
-    await _fn
-        .httpsCallable('leaveStudyGroup')
-        .call<Object?>({
-      'groupId': groupId,
-    });
+  if (currentUser == null) {
+    throw Exception('User is not authenticated');
   }
+
+  final idToken = await currentUser.getIdToken();
+
+  if (idToken == null || idToken.isEmpty) {
+    throw Exception('Firebase token is missing');
+  }
+
+  await Supabase.instance.client.functions.invoke(
+    'leave-study-group',
+    body: {
+      'groupId': groupId,
+    },
+    headers: {
+      'Authorization': 'Bearer $idToken',
+    },
+  );
+}
 }

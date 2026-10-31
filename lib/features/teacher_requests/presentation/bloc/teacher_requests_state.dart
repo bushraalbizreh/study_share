@@ -40,7 +40,7 @@ class RequestDetailsLoaded extends TeacherRequestsState {
   List<Object?> get props => [group];
 }
 
-/// One-time feedback for BlocListener.
+
 class RequestDecisionSucceeded extends TeacherRequestsState {
   const RequestDecisionSucceeded({required this.accepted});
 

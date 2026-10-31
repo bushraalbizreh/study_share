@@ -54,7 +54,7 @@ class AppTheme {
       bodyColor: scheme.onSurface,
       displayColor: scheme.onSurface,
     );
-    final display = GoogleFonts.reemKufiTextTheme(base);
+    final display = GoogleFonts.tajawalTextTheme(base);
     final textTheme = body.copyWith(
       headlineMedium: display.headlineMedium?.copyWith(
         color: scheme.onSurface,
@@ -138,8 +138,25 @@ class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.surface,
-        indicatorColor: scheme.secondaryContainer,
-        labelTextStyle: WidgetStatePropertyAll(textTheme.labelSmall),
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        height: 64,
+        indicatorColor: Colors.transparent,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            size: selected ? 24 : 22,
+            color: selected ? scheme.primary : scheme.onSurfaceVariant,
+          );
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return textTheme.labelSmall?.copyWith(
+            color: selected ? scheme.primary : scheme.onSurfaceVariant,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+          );
+        }),
       ),
       dividerTheme: DividerThemeData(color: scheme.outlineVariant, space: 1),
       snackBarTheme: SnackBarThemeData(

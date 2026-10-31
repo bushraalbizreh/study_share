@@ -1,7 +1,9 @@
 /// Generated-by-hand string table (ar). Keys must match the other language.
 const Map<String, String> stringsAr = {
   'currency': 'ل .س',
+  
   'splash.tagline': 'ادرسوا معاً، وتعلّموا أفضل',
+
   'action.add': 'إضافة',
   'action.cancel': 'إلغاء',
   'action.continue': 'متابعة',
@@ -13,6 +15,7 @@ const Map<String, String> stringsAr = {
   'action.save': 'حفظ التغييرات',
   'action.seeAll': 'عرض الكل',
   'state.error': 'حدث خطأ ما',
+
   'err.generic': 'حدث خطأ ما. حاول مرة أخرى.',
   'err.network': 'لا يوجد اتصال. تحقق من الإنترنت وحاول مجدداً.',
   'err.unavailable': 'الخدمة غير متاحة حالياً. حاول بعد قليل.',
@@ -55,16 +58,20 @@ const Map<String, String> stringsAr = {
   'err.image-too-large': 'الصورة كبيرة جداً (الحد 5 ميغابايت).',
   'err.upload-missing': 'لم يكتمل الرفع. حاول مرة أخرى.',
   'err.invalid-path': 'صورة غير صالحة.',
+
   'status.open': 'مفتوحة',
   'status.pending': 'قيد المراجعة',
   'status.accepted': 'مقبولة',
   'status.rejected': 'مرفوضة',
+
   'level.all': 'الكل',
   'level.elementary': 'ابتدائي',
   'level.middle': 'متوسط',
   'level.high': 'ثانوي',
+
   'slot.available': 'متاح',
   'slot.booked': 'محجوز',
+  
   'field.name': 'الاسم الكامل',
   'field.email': 'البريد الإلكتروني',
   'field.password': 'كلمة المرور',
@@ -74,6 +81,7 @@ const Map<String, String> stringsAr = {
   'validation.password': 'استخدم 8 أحرف على الأقل',
   'validation.passwordMatch': 'كلمتا المرور غير متطابقتين',
   'validation.number': 'أدخل رقماً صحيحاً',
+
   'onboarding.skip': 'تخطي',
   'onboarding.start': 'ابدأ الآن',
   'onboarding.1.title': 'اعثر على المعلم المناسب',
@@ -82,6 +90,7 @@ const Map<String, String> stringsAr = {
   'onboarding.2.body': 'أنشئ مجموعة أو انضم إلى مجموعة مفتوحة، وقاسم زملاءك تكلفة الحصة.',
   'onboarding.3.title': 'تعلّم وابقَ على تواصل',
   'onboarding.3.body': 'بعد موافقة المعلم تحصل مجموعتك على محادثة خاصة لتنسيق الحصص.',
+
   'login.title': 'أهلاً بعودتك',
   'login.subtitle': 'سجّل الدخول لمتابعة استخدام StudyShare.',
   'login.submit': 'تسجيل الدخول',
@@ -90,17 +99,20 @@ const Map<String, String> stringsAr = {
   'login.resetSent': 'تم إرسال رابط إعادة تعيين كلمة المرور إلى {email}.',
   'login.noAccount': 'ليس لديك حساب؟',
   'login.create': 'أنشئ حساباً',
+
   'role.title': 'كيف ستستخدم StudyShare؟',
   'role.subtitle': 'لا يمكن تغيير الدور لاحقاً.',
   'role.student': 'أنا طالب',
   'role.studentBody': 'أبحث عن معلمين وأدرس ضمن مجموعات.',
   'role.teacher': 'أنا معلم',
   'role.teacherBody': 'أنشر مواعيدي وأقبل طلبات المجموعات.',
+
   'register.title': 'أنشئ حسابك',
   'register.asStudent': 'التسجيل كطالب',
   'register.asTeacher': 'التسجيل كمعلم',
   'register.submit': 'إنشاء الحساب',
   'register.haveAccount': 'لدي حساب بالفعل',
+
   'nav.home': 'الرئيسية',
   'nav.explore': 'استكشف',
   'nav.groups': 'مجموعاتي',
@@ -108,6 +120,7 @@ const Map<String, String> stringsAr = {
   'nav.requests': 'الطلبات',
   'nav.availability': 'التوفر',
   'nav.notifications': 'الإشعارات',
+
   'home.title': 'StudyShare',
   'home.hello': 'مرحباً، {name}',
   'home.noNext': 'لا توجد حصة قادمة بعد',
@@ -115,6 +128,7 @@ const Map<String, String> stringsAr = {
   'home.explore': 'استكشف',
   'home.teachers': 'معلمون مقترحون',
   'home.openGroups': 'مجموعات مفتوحة',
+
   'explore.title': 'استكشاف',
   'explore.search': 'ابحث عن معلم أو مادة',
   'explore.teachers': 'المعلمون',
@@ -122,6 +136,7 @@ const Map<String, String> stringsAr = {
   'explore.noTeachers': 'لا يوجد معلمون',
   'explore.noGroups': 'لا توجد مجموعات مفتوحة',
   'explore.emptyHint': 'جرّب بحثاً أو مرحلة أخرى.',
+
   'teacher.title': 'المعلم',
   'teacher.notFound': 'المعلم غير موجود',
   'teacher.about': 'نبذة',
@@ -132,6 +147,7 @@ const Map<String, String> stringsAr = {
   'teacher.noSlotsHint': 'لم ينشر هذا المعلم مواعيد مفتوحة بعد.',
   'teacher.createGroup': 'إنشاء مجموعة دراسية',
   'teacher.from': 'من',
+
   'create.title': 'مجموعة دراسية جديدة',
   'create.subject': 'المادة',
   'create.slot': 'الموعد',
@@ -146,6 +162,7 @@ const Map<String, String> stringsAr = {
   'create.incomplete': 'اختر المادة والموعد والمرحلة.',
   'create.unavailable': 'غير متاح بعد',
   'create.unavailableHint': 'يحتاج هذا المعلم إلى مواد وأسعار ومواعيد مفتوحة قبل إنشاء المجموعات.',
+
   'group.title': 'المجموعة الدراسية',
   'group.teacher': 'المعلم',
   'group.when': 'الموعد',
@@ -172,6 +189,7 @@ const Map<String, String> stringsAr = {
   'mygroups.title': 'مجموعاتي',
   'mygroups.empty': 'لا توجد مجموعات هنا بعد',
   'mygroups.emptyHint': 'أنشئ مجموعة من ملف معلم أو انضم إلى مجموعة مفتوحة.',
+  
   'availability.title': 'التوفر',
   'availability.add': 'إضافة موعد',
   'availability.empty': 'لا توجد مواعيد قادمة',
@@ -183,6 +201,7 @@ const Map<String, String> stringsAr = {
   'availability.deleteConfirm': 'لن يتمكن الطلاب من حجزه بعد الآن.',
   'availability.done.created': 'تمت إضافة الموعد.',
   'availability.done.deleted': 'تم حذف الموعد.',
+
   'dashboard.title': 'الطلبات',
   'dashboard.hello': 'مرحباً، {name}',
   'dashboard.pending': 'بانتظار قرارك',
@@ -191,6 +210,7 @@ const Map<String, String> stringsAr = {
   'dashboard.noPending': 'لا توجد طلبات معلّقة',
   'dashboard.noPendingHint': 'ستظهر هنا المجموعات المكتملة لتقبلها أو ترفضها.',
   'dashboard.acceptedList': 'المجموعات المقبولة',
+
   'request.title': 'تفاصيل الطلب',
   'request.accept': 'قبول',
   'request.reject': 'رفض',
@@ -199,8 +219,10 @@ const Map<String, String> stringsAr = {
   'request.rejectedDone': 'تم رفض الطلب.',
   'request.students': 'الطلاب',
   'request.expected': 'الدخل المتوقع',
+
   'notifications.title': 'الإشعارات',
   'notifications.markAll': 'تعيين الكل كمقروء',
+  'notifications.deleteAll': 'حذف كل الإشعارات',
   'notifications.empty': 'لا شيء بعد',
   'notifications.emptyHint': 'ستظهر هنا مستجدات مجموعاتك.',
   'notif.group_full.title': 'اكتملت مجموعة',
@@ -209,11 +231,16 @@ const Map<String, String> stringsAr = {
   'notif.group_accepted.body': 'قبل المعلم «{subject}». المحادثة مفتوحة.',
   'notif.group_rejected.title': 'تم رفض المجموعة',
   'notif.group_rejected.body': 'رفض المعلم «{subject}».',
+ 
+  "closed": "انتهت مدة المحادثة. يمكنك قراءة الرسائل السابقة فقط.",
+  "checking": "جارٍ التحقق من حالة المحادثة...",
+  "statusUnavailable": "تعذر التحقق من حالة المحادثة. تم تعطيل الإرسال مؤقتًا.",
   'chat.title': 'محادثة المجموعة',
   'chat.hint': 'اكتب رسالة',
   'chat.send': 'إرسال',
   'chat.empty': 'لا توجد رسائل بعد',
   'chat.emptyHint': 'ابدأ بالسلام على مجموعتك.',
+
   'profile.title': 'حسابي',
   'profile.changePhoto': 'تغيير الصورة',
   'profile.gallery': 'اختيار من المعرض',
@@ -230,13 +257,16 @@ const Map<String, String> stringsAr = {
   'profile.done.saved': 'تم حفظ الملف الشخصي.',
   'profile.done.imageUpdated': 'تم تحديث الصورة.',
   'profile.done.imageRemoved': 'تمت إزالة الصورة.',
+
   'settings.language': 'اللغة',
   'settings.theme': 'المظهر',
   'settings.logout': 'تسجيل الخروج',
   'settings.logoutConfirm': 'هل تريد تسجيل الخروج من StudyShare؟',
+
   'theme.system': 'النظام',
   'theme.light': 'فاتح',
   'theme.dark': 'داكن',
+
   'err.invalid-decision': 'قرار غير صالح.',
   'err.invalid-teacher': 'معلم غير صالح.',
   'err.invalid-slot': 'موعد غير صالح.',

@@ -3,7 +3,6 @@ import 'package:app_study_share/features/availability/domain/repositories/availa
 import 'package:app_study_share/features/teacher_profile/domain/entities/teacher_profile.dart';
 import 'package:app_study_share/features/teacher_profile/domain/repositories/teacher_profile_repository.dart';
 
-/// A teacher profile together with the slots students may currently pick.
 class TeacherProfileDetails {
   const TeacherProfileDetails({required this.profile, required this.slots});
 
@@ -12,7 +11,6 @@ class TeacherProfileDetails {
 }
 
 abstract class GetTeacherProfileUseCase {
-  /// Returns null when the teacher has no profile.
   Future<TeacherProfileDetails?> execute(String teacherId);
 }
 

@@ -21,6 +21,10 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
       guardCall(() => remote.markAllRead(userId: userId));
 
   @override
+  Future<void> deleteAll({required String userId}) =>
+      guardCall(() => remote.deleteAll(userId: userId));
+
+  @override
   Future<void> registerDevice() => guardCall(remote.registerDevice);
 
   @override

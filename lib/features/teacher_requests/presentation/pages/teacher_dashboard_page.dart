@@ -3,6 +3,8 @@ import 'package:app_study_share/core/localization/app_localizations.dart';
 import 'package:app_study_share/core/routing/route_names.dart';
 import 'package:app_study_share/core/session/session.dart';
 import 'package:app_study_share/core/widgets/app_widgets.dart';
+import 'package:app_study_share/features/notifications/presentation/bloc/notifications_bloc.dart';
+import 'package:app_study_share/features/notifications/presentation/bloc/notifications_state.dart';
 import 'package:app_study_share/features/study_groups/domain/entities/study_group.dart';
 import 'package:app_study_share/features/study_groups/presentation/widgets/study_group_card.dart';
 import 'package:app_study_share/features/teacher_requests/presentation/bloc/teacher_requests_bloc.dart';
@@ -12,17 +14,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TeacherDashboardPage extends StatelessWidget {
-  const TeacherDashboardPage({super.key});
+  const TeacherDashboardPage({super.key, this.onOpenProfile});
+
+  final VoidCallback? onOpenProfile;
 
   @override
   Widget build(BuildContext context) => BlocProvider<TeacherRequestsBloc>(
     create: (_) => getIt<TeacherRequestsBloc>()..add(const RequestsRequested()),
-    child: const _View(),
+    child: _View(onOpenProfile: onOpenProfile),
   );
 }
 
 class _View extends StatelessWidget {
-  const _View();
+  const _View({this.onOpenProfile});
+
+  final VoidCallback? onOpenProfile;
 
   Future<void> _open(BuildContext context, StudyGroup g) async {
     final bloc = context.read<TeacherRequestsBloc>();
@@ -32,10 +38,29 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = getIt<Session>().user?.name ?? '';
+    final user = getIt<Session>().user;
+    final name = user?.name ?? '';
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr('dashboard.title'))),
+      appBar: AppBar(
+        title: Text(context.tr('dashboard.title')),
+        actions: [
+          BlocBuilder<NotificationsBloc, NotificationsState>(
+            builder: (context, s) {
+              final n = s is NotificationsLoaded ? s.unreadCount : 0;
+              return IconButton(
+                tooltip: context.tr('notifications.title'),
+                onPressed: () => Navigator.of(context).pushNamed(RouteNames.notifications),
+                icon: Badge(
+                  isLabelVisible: n > 0,
+                  label: Text('$n'),
+                  child: const Icon(Icons.notifications_outlined),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: BlocConsumer<TeacherRequestsBloc, TeacherRequestsState>(
         listenWhen: (_, c) => c is RequestDecisionSucceeded || c is RequestDecisionFailed,
         listener: (context, state) {
@@ -65,7 +90,22 @@ class _View extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(context.tr('dashboard.hello', {'name': name}), style: Theme.of(context).textTheme.headlineSmall),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: onOpenProfile,
+                            customBorder: const CircleBorder(),
+                            child: UserAvatar(name: name, imageUrl: user?.imageUrl, radius: 24),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              context.tr('dashboard.hello', {'name': name}),
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 14),
                       Row(
                         children: [

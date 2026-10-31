@@ -20,3 +20,4 @@ class TeacherRequestsRepositoryImpl implements TeacherRequestsRepository {
   Future<void> decide({required String groupId, required bool accept}) =>
       guardCall(() => remote.decide(groupId: groupId, accept: accept));
 }
+

@@ -18,6 +18,8 @@ abstract class NotificationsRemoteSource {
 
   Future<void> markAllRead({required String userId});
 
+  Future<void> deleteAll({required String userId});
+
   Future<void> registerDevice();
 
   Future<void> unregisterDevice();
@@ -108,6 +110,26 @@ class NotificationsRemoteSourceImpl implements NotificationsRemoteSource {
     }
 
     await batch.commit();
+  }
+
+  @override
+  Future<void> deleteAll({required String userId}) async {
+    while (true) {
+      final chunk = await _col
+          .where('userId', isEqualTo: userId)
+          .limit(450)
+          .get();
+
+      if (chunk.docs.isEmpty) return;
+
+      final batch = _db.batch();
+
+      for (final d in chunk.docs) {
+        batch.delete(d.reference);
+      }
+
+      await batch.commit();
+    }
   }
 
   DocumentReference<Map<String, dynamic>>? _deviceDoc(String token) {

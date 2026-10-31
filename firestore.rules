@@ -112,13 +112,15 @@ service cloud.firestore {
       }
     }
 
-    // ---- notifications: created by Cloud Functions; users only mark their own as read ----
+    // ---- notifications: created by Cloud Functions; users read, mark as read
+    // and delete their own ----
     match /notifications/{id} {
       allow read: if signedIn() && resource.data.userId == request.auth.uid;
       allow update: if signedIn() && resource.data.userId == request.auth.uid
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read'])
         && request.resource.data.read is bool;
-      allow create, delete: if false;
+      allow create: if false;
+      allow delete: if signedIn() && resource.data.userId == request.auth.uid;
     }
   }
 }

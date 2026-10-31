@@ -20,6 +20,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     );
     on<NotificationMarkedRead>(_onMarkRead);
     on<NotificationsAllMarkedRead>(_onMarkAll);
+    on<NotificationsAllDeleted>(_onDeleteAll);
   }
 
   final NotificationsUseCase _useCase;
@@ -72,6 +73,19 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     if (uid == null) return;
     try {
       await _useCase.markAllRead(userId: uid);
+    } on Failure {
+      // Ignored: stream stays authoritative.
+    }
+  }
+
+  Future<void> _onDeleteAll(
+    NotificationsAllDeleted e,
+    Emitter<NotificationsState> emit,
+  ) async {
+    final uid = _userId;
+    if (uid == null) return;
+    try {
+      await _useCase.deleteAll(userId: uid);
     } on Failure {
       // Ignored: stream stays authoritative.
     }

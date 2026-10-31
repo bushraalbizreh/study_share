@@ -14,7 +14,6 @@ class ChatMessage extends Equatable {
   final String senderName;
   final String text;
 
-  /// Null while the server timestamp is still pending (local echo).
   final DateTime? createdAt;
 
   @override

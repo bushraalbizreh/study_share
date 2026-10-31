@@ -176,8 +176,6 @@ class TeacherRequestsRemoteSourceImpl
         '${response.data}',
       );
     } catch (error, stackTrace) {
-      // The teacher's decision has already been saved.
-      // A notification failure must not undo that decision.
       debugPrint(
         '[NOTIFICATIONS] Decision notification failed: $error',
       );
